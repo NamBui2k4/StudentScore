@@ -1,0 +1,3 @@
+mean_absolute_error: 4.181966418321511
+mean_squared_error: 28.82105656383287
+Variance Regression Score: 0.8818351415716299

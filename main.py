@@ -10,10 +10,11 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GridSearchCV
 
 data = pd.read_csv("StudentScore.xls")
-target = "math score"
-# profile = ProfileReport(data, title="Student Score Report", explorative=True)
-# profile.to_file("student.html")
 
+# profile = ProfileReport(data, title="Student Score Report", explorative=True)
+# profile.to_file("Statistic.html")
+
+target = "math score"
 x = data.drop(target, axis=1)
 y = data[target]
 
@@ -51,22 +52,27 @@ params = {
     "max_depth": [None, 2, 5],
     "min_samples_split": [2, 5]
 }
-
+from sklearn.linear_model import LinearRegression
 reg = Pipeline(steps=[
     ("preprocessor", preprocessor),
-    ("model", GridSearchCV(RandomForestRegressor(random_state=100), param_grid=params, cv=6, verbose=2,
-                     n_jobs=6))
+    ("model",LinearRegression())
 ])
 
 reg.fit(x_train, y_train)
+
+with open('coef.txt', 'w') as f:
+    for i,j in zip(x.columns,reg['model'].coef_):
+        f.write('{} is within coefficient of: {} \n'.format(i,j))
+    
+
 y_pred = reg.predict(x_test)
-
 from sklearn.metrics import mean_absolute_error, mean_squared_error, explained_variance_score
-print('mean_absolute_error: ', mean_absolute_error(y_test, y_pred))
-print('mean_squared_error: ', mean_squared_error(y_test, y_pred))
-print('Variance Regression Score: ', explained_variance_score(y_test, y_pred))
+with open('Loss.txt', 'w') as f:
+    f.write('mean_absolute_error: {}\n'.format(mean_absolute_error(y_test, y_pred)))
+    f.write('mean_squared_error: {}\n'.format(mean_squared_error(y_test, y_pred)))
+    f.write('Variance Regression Score: {}\n'.format(explained_variance_score(y_test, y_pred))  )
 
-
+# visualize results
 import matplotlib.pyplot as plt 
 plt.figure(figsize=(10, 6))
 plt.plot(y_test.values, label='Actual Values')
@@ -76,3 +82,8 @@ plt.xlabel('Sample Index')
 plt.ylabel('Math Score')
 plt.title('Actual vs Predicted Math Scores')
 plt.savefig('Result.png')
+
+# save model
+import pickle
+with open('model.pkl', 'wb') as f:
+    pickle.dump(reg, f)

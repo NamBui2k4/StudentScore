@@ -1,0 +1,7 @@
+gender is within coefficient of: 3.3709078725204265 
+race/ethnicity is within coefficient of: 10.946755052912279 
+parental level of education is within coefficient of: -0.8461519538354558 
+lunch is within coefficient of: -0.455203894399691 
+test preparation course is within coefficient of: -1.3978442255490153 
+reading score is within coefficient of: -1.4175331856414035 
+writing score is within coefficient of: 4.116733259425568 
